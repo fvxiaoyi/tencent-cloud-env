@@ -31,8 +31,8 @@ jobs:
 
     - name: print secrets
       run: |
-        echo "$MY_SECRET" >> /k3s.yaml
-        cat /k3s.yaml
+        echo "$MY_SECRET" >> k3s.yaml
+        cat k3s.yaml
       shell: bash
       env:
         MY_SECRET: ${{secrets.KUBE_CONFIG}}
