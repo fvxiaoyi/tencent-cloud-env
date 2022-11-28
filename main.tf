@@ -16,5 +16,5 @@ data "sops_file" "secrets" {
 }
 
 output "o" {
-  value = data.sops_file.secrets.data["slack_url"]
+  value = data.sops_file.secrets.data["github_token"]
 }
