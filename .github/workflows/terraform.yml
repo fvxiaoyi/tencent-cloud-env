@@ -29,12 +29,11 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
 
-    - name: Decode secret
-      uses: davidSchuppa/base64Secret-toFile-action@v1
+    - name: Import kube config
+      uses: JakubMosakowski/secret-into-file-action@v1.0.0
       with:
         secret: ${{ secrets.KUBE_CONFIG }}
-        filename: k3s.yaml
-        destination-path: /
+        filename: "/k3s.yaml"
 
     - name:
       run: ll /
