@@ -1,8 +1,6 @@
 name: 'Terraform'
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
 
 jobs:
@@ -10,13 +8,11 @@ jobs:
     name: 'Terraform'
     runs-on: ubuntu-latest
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
     
@@ -32,9 +28,6 @@ jobs:
       env:
         MY_SECRET: ${{secrets.KUBE_CONFIG}}
 
-    - name: ls
-      run: ls
-    
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -45,7 +38,20 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -out terraform.plan
+
+      # generate plain output
+    - run: terraform show -no-color terraform.plan > terraform.text
+
+      # generate json output
+    - run: terraform show -json terraform.plan > terraform.json
+
+    - uses: ahmadnassri/action-terraform-report@v3
+      with:
+        # tell the action the plan outputs
+        terraform-text: ${{ github.workspace }}/terraform.text
+        terraform-json: ${{ github.workspace }}/terraform.json
+        remove-stale-reports: true
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
