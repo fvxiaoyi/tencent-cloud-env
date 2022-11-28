@@ -71,7 +71,7 @@ jobs:
     - name: Sops Binary Installer
       uses: mdgreenwald/mozilla-sops-action@v1.2.0
       with:
-        version: 'v2.16.7'
+        version: '2.16.7'
       id: install
 
 #     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
