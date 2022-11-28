@@ -38,24 +38,15 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -out terraform.plan
+      run: terraform plan -out workspace.plan
 
-      # generate plain output
-    - run: terraform show -no-color terraform.plan > terraform.text
-
-      # generate json output
-    - run: terraform show -json terraform.plan > terraform.json
-
-    - run: |
-        ls
-        cat terraform.json
-
-    - uses: ahmadnassri/action-terraform-report@v3
+    - name: Post Plan
+      if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
+      uses: robburger/terraform-pr-commenter@v1
       with:
-        # tell the action the plan outputs
-        terraform-text: ${{ github.workspace }}/terraform.text
-        terraform-json: ${{ github.workspace }}/terraform.json
-        remove-stale-reports: true
+        commenter_type: plan
+        commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+        commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
