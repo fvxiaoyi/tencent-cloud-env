@@ -5,14 +5,10 @@ on:
     branches: [ "main" ]
   pull_request:
 
-permissions:
-  contents: read
-
 jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -37,7 +33,7 @@ jobs:
         MY_SECRET: ${{secrets.KUBE_CONFIG}}
 
     - name: ls
-      run: ll
+      run: ls
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
