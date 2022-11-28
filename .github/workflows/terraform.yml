@@ -46,7 +46,9 @@ jobs:
       # generate json output
     - run: terraform show -json terraform.plan > terraform.json
 
-    - run: ls
+    - run: |
+        ls
+        cat terraform.json
 
     - uses: ahmadnassri/action-terraform-report@v3
       with:
