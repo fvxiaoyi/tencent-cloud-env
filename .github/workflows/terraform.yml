@@ -33,7 +33,7 @@ jobs:
       uses: JakubMosakowski/secret-into-file-action@v1.0.0
       with:
         secret: ${{ secrets.KUBE_CONFIG }}
-        filename: "/k3s.yaml"
+        filename: "~/k3s.yaml"
 
     - name:
       run: ll /
