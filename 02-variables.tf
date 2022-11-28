@@ -28,6 +28,12 @@ variable "target_path" {
   description = "flux sync target path"
 }
 
+variable "kubernetes_config_path" {
+  description = "kubernetes config path"
+  type        = string
+  default     = "./k3s.yaml"
+}
+
 data "sops_file" "secrets" {
-  source_file = "../secrets/secrets.enc.json"
+  source_file = "./secrets/secrets.enc.json"
 }

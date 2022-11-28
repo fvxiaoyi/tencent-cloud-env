@@ -36,7 +36,7 @@ provider "flux" {}
 provider "kubectl" {}
 
 provider "kubernetes" {
-  config_path = "/k3s.yaml"
+  config_path = var.kubernetes_config_path
 }
 
 provider "github" {
