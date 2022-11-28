@@ -29,15 +29,13 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
 
-    - name: Decode secret
-      uses: davidSchuppa/base64Secret-toFile-action@v1
-      with:
-        secret: ${{ secrets.KUBE_CONFIG }}
-        filename: k3s.yaml
-        destination-path: ~/
-
-    - name:
-      run: ll /
+    - name: print secrets
+      run: |
+        echo "$MY_SECRET" >> /k3s.yaml
+        cat /k3s.yaml
+      shell: bash
+      env:
+        MY_SECRET: ${{secrets.KUBE_CONFIG}}
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
