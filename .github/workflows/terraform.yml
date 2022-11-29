@@ -38,7 +38,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -out workspace.plan
+      run: terraform plan -out terraform.plan
 
       # generate plain output
     - run: terraform show -no-color terraform.plan > terraform.text
