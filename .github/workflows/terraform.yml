@@ -49,8 +49,12 @@ jobs:
     - name: PR Comment
       uses: actions/github-script@v6
       with:
-       script: |
-         const fs = require('fs')
-         let planJson = fs.readFileSync('tfplan.json', 'utf8')
-         const resource_changes = JSON.parse(planJson).resource_changes
-         console.log(resource_changes)
+        script: |
+          const fs = require('fs')
+          let planJson = fs.readFileSync('tfplan.json', 'utf8')
+          planJson = planJson.replace(/"content"\s?:\s?"(.*?)(?<!\\)"/, '"content": "sensitive"')
+          planJson = planJson.replace(/"yaml_body"\s?:\s?"(.*?)(?<!\\)"/, '"yaml_body": "sensitive"')
+          planJson = planJson.replace(/"yaml_body_parsed"\s?:\s?"(.*?)(?<!\\)"/, '"yaml_body_parsed": "sensitive"')
+          planJson = planJson.replace(/"values":\{"content": "(.*?)","documents":\[(.*?)\],"id":"(.*?)","manifests":\{(.*?)\}}/, '"values": "sensitive"')
+          console.log(planJson)
+          const resource_changes = JSON.parse(planJson).resource_changes
