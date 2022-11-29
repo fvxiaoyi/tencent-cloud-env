@@ -7,7 +7,9 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-
+    env:
+      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      TF_IN_AUTOMATION: true
     defaults:
       run:
         shell: bash
