@@ -55,6 +55,7 @@ jobs:
           planJson = planJson.replace(/"content"\s?:\s?"(.*?)(?<!\\)"/, '"content": "sensitive"')
           planJson = planJson.replace(/"yaml_body"\s?:\s?"(.*?)(?<!\\)"/, '"yaml_body": "sensitive"')
           planJson = planJson.replace(/"yaml_body_parsed"\s?:\s?"(.*?)(?<!\\)"/, '"yaml_body_parsed": "sensitive"')
+          planJson = planJson.replace(/"values":\{"content": "(.*?)","documents":\[(.*?)\],"id":"(.*?)","manifests":\{(.*?)\}}/, '"values": "sensitive"')
           fs.writeFileSync('format.json', planJson);
 
     - name: Format output plan json
