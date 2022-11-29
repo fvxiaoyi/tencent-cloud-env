@@ -56,5 +56,10 @@ jobs:
           planJson = planJson.replace(/"yaml_body"\s?:\s?"(.*?)(?<!\\)"/g, '"yaml_body": "sensitive"')
           planJson = planJson.replace(/"yaml_body_parsed"\s?:\s?"(.*?)(?<!\\)"/g, '"yaml_body_parsed": "sensitive"')
           planJson = planJson.replace(/"values":\{"content": "(.*?)","documents":\[(.*?)\],"id":"(.*?)","manifests":\{(.*?)\}}/g, '"values": "sensitive"')
-          console.log(planJson)
-          const resource_changes = JSON.parse(planJson).resource_changes
+          
+          const endStr = ',"prior_state"'
+          let match = planJson.match(/"resource_changes":(.*?)(,"prior_state")/)
+          let matched = match[0]
+          let result = "{" + matched.substr(0, matched.length - endStr.length) + "}"
+          console.log(result)
+          const resource_changes = JSON.parse(result)
