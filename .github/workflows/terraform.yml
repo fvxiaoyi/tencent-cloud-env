@@ -61,37 +61,11 @@ jobs:
           let match = planJson.match(/"resource_changes":(.*?)(,"prior_state")/)
           let matched = match[0]
           let result = "{" + matched.substr(0, matched.length - endStr.length) + "}"
-          const resource_changes = JSON.parse(result).resource_changes
-          if(Array.isArray(resource_changes) && resource_changes.length > 0) {
-                const resources_to_create   = []
-                , resources_to_update   = []
-                , resources_to_delete   = []
-                , resources_to_replace  = []
-                , resources_unchanged   = [];
-    
-                // for each resource changes
-                for(const resource of resource_changes) {
-                  const change = resource.change;
-                  const address = resource.address;
+          fs.writeFileSync('format.json', result);
 
-                  switch(change.actions[0]) {
-                      default:
-                          break;
-                      case "no-op":
-                          resources_unchanged.push(address);
-                          break;
-                      case "create":
-                          resources_to_create.push(address);
-                          break;
-                      case "delete":
-                          if(change.actions.length > 1) {
-                              resources_to_replace.push(address);
-                          } else {
-                              resources_to_delete.push(address);
-                          }
-                          break;
-                      case "update":
-                          resources_to_update.push(address);
-                          break;
-                  }
-              }
+    - name: PR Comment
+      uses: liatrio/terraform-change-pr-commenter@v1.3.2
+      with:
+        json-file: format.json
+        github-token: ${{ secrets.TOKEN }}
+        expand-comment: 'true'
