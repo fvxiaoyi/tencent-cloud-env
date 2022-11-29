@@ -58,5 +58,5 @@ jobs:
     - name: PR Comment
       uses: liatrio/terraform-change-pr-commenter@v1.3.2
       with:
-        json-file: tfplan.json
+        json-file: format.json
         expand-comment: 'true'
