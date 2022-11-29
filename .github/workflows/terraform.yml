@@ -41,7 +41,7 @@ jobs:
       run: terraform plan -out terraform.plan
 
       # generate plain output
-    - run: terraform show -no-color -json workspace.plan > tfplan.json
+    - run: terraform show -no-color -json terraform.plan > tfplan.json
 
     - name: Terraform Plan
       uses: liatrio/terraform-change-pr-commenter@v1.3.2
