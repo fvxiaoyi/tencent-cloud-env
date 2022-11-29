@@ -46,18 +46,11 @@ jobs:
     - name: Output plan
       run: terraform show -no-color -json workspace.plan > tfplan.json
 
-#    - name: Format output plan json
-#      uses: actions/github-script@v6
-#      with:
-#        script: |
-#          const fs = require('fs')
-#          let planJson = fs.readFileSync('tfplan.json', 'utf8')
-#          const resource_changes = JSON.parse(planJson).resource_changes;
-#          fs.writeFileSync('format.json', planJson);
-
     - name: PR Comment
-      uses: liatrio/terraform-change-pr-commenter@v1.3.2
+      uses: actions/github-script@v6
       with:
-        json-file: tfplan.json
-        github-token: ${{ secrets.TOKEN }}
-        expand-comment: 'true'
+       script: |
+         const fs = require('fs')
+         let planJson = fs.readFileSync('tfplan.json', 'utf8')
+         const resource_changes = JSON.parse(planJson).resource_changes
+         console.log(resource_changes)
