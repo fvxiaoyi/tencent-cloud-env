@@ -43,22 +43,7 @@ jobs:
       # generate plain output
     - run: terraform show -no-color -json terraform.plan > tfplan.json
 
-    - name: Terraform Plan
+    - name: PR Comment
       uses: liatrio/terraform-change-pr-commenter@v1.3.2
       with:
         json-file: tfplan.json
-        expand-comment: 'true'
-
-    #    - name: Post Plan
-##      if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
-#      uses: robburger/terraform-pr-commenter@v1
-#      with:
-#        commenter_type: plan
-#        commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
-#        commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
-
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-#    - name: Terraform Apply
-#      if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
-#      run: terraform apply -auto-approve -input=false
