@@ -46,39 +46,17 @@ jobs:
     - name: Output plan
       run: terraform show -no-color -json workspace.plan > tfplan.json
 
-    - name: Terraform - Show Plan in PR
+    - name: Format output plan json
       uses: actions/github-script@v6
-      if: github.event_name == 'pull_request'
       with:
-        github-token: ${{ secrets.TOKEN }}
         script: |
-          const run_url = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
-          const run_link = '<a href="' + run_url + '">Actions</a>.'
           const fs = require('fs')
-          let plan_file = fs.readFileSync('tfplan.json', 'utf8')
-          fs.writeFileSync('test.json', 'Hey there!');
-          plan_file = JSON.stringify(plan_file, null, 4)
-          const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
-          const truncated_message = plan_file.length > 65000 ? "Output is too long and was truncated. You can read full Plan in " + run_link + "<br /><br />" : ""
-          const output = `#### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-          
-          <details><summary>Show Plan</summary>
-          
-          \`\`\`\n
-          ${plan}
-          \`\`\`
-          
-          </details>
-          ${truncated_message}
-          
-          *Pusher: @${{ github.actor }} *`;
-          
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
+          let planJson = fs.readFileSync('tfplan.json', 'utf8')
+          planJson = planJson.replace(/"yaml_body"\s?:\s?"(.*?)",?/, '')
+          fs.writeFileSync('format.json', planJson);
 
-    - name: Terraform - Show Plan in PR
-      run: ls
+    - name: PR Comment
+      uses: liatrio/terraform-change-pr-commenter@v1.3.2
+      with:
+        json-file: tfplan.json
+        expand-comment: 'true'
