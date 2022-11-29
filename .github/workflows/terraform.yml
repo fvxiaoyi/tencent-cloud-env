@@ -38,12 +38,13 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -out terraform.plan
+      id: plan
+      run: terraform plan -out workspace.plan
 
-      # generate plain output
-    - run: terraform show -no-color -json terraform.plan > tfplan.json
-
-    - name: PR Comment
-      uses: liatrio/terraform-change-pr-commenter@v1.3.2
+    - name: Post Plan
+#      if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
+      uses: robburger/terraform-pr-commenter@v1
       with:
-        json-file: tfplan.json
+        commenter_type: plan
+        commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+        commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
